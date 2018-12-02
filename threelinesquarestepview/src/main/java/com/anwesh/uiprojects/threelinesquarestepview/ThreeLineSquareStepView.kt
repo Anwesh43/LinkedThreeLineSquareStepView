@@ -219,4 +219,12 @@ class ThreeLineSquareStepView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity: Activity) : ThreeLineSquareStepView {
+            val view : ThreeLineSquareStepView = ThreeLineSquareStepView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
