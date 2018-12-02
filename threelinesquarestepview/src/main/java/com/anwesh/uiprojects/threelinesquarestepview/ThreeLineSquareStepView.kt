@@ -14,7 +14,8 @@ import android.content.Context
 import android.app.Activity
 
 val nodes : Int = 5
-val lines : Int = 4
+val lines : Int = 3
+val sides : Int = 4
 val color : Int = Color.parseColor("#0D47A1")
 val sizeFactor : Int = 3
 val strokeFactor : Int = 120
@@ -30,3 +31,34 @@ fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.getInverse() + scaleFactor() * b.getInverse()
 
 fun Float.updateScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawTLSSNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = color
+    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeCap = Paint.Cap.ROUND
+    val xGap : Float = gap / (nodes - 1)
+    save()
+    translate(gap * (i + 1), h/2)
+    rotate(90f * sc2)
+    drawRect(RectF(-size/2, -size/2, size/2, size/2), paint)
+    for(j in 0..(sides - 1)) {
+        val scj : Float = sc1.divideScale(j, sides)
+        save()
+        rotate(90f * j)
+        for (p in 0..(lines - 1)) {
+            val scp : Float = scj.divideScale(p, lines)
+            save()
+            translate(xGap * p, size/2)
+            drawLine(0f, 0f, 0f, (size/2) * scp, paint)
+            restore()
+        }
+        restore()
+    }
+    restore()
+}
