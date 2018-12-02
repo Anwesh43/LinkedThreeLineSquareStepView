@@ -39,14 +39,17 @@ fun Canvas.drawTLSSNode(i : Int, scale : Float, paint : Paint) {
     val size : Float = gap / sizeFactor
     val sc1 : Float = scale.divideScale(0, 2)
     val sc2 : Float = scale.divideScale(1, 2)
+    val kw : Float = (2 * size / 3)
+    val kh : Float = (2 * size / 3)
+    val sw : Float = size / 3
     paint.color = color
-    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
-    val xGap : Float = gap / (nodes - 1)
+    val xGap : Float = (2 * kw - paint.strokeWidth) / (lines - 1)
     save()
     translate(gap * (i + 1), h/2)
     rotate(90f * sc2)
-    drawRect(RectF(-size/2, -size/2, size/2, size/2), paint)
+    drawRect(RectF(-kw, -kh, kw, kh), paint)
     for(j in 0..(sides - 1)) {
         val scj : Float = sc1.divideScale(j, sides)
         save()
@@ -54,8 +57,8 @@ fun Canvas.drawTLSSNode(i : Int, scale : Float, paint : Paint) {
         for (p in 0..(lines - 1)) {
             val scp : Float = scj.divideScale(p, lines)
             save()
-            translate(xGap * p, size/2)
-            drawLine(0f, 0f, 0f, (size/2) * scp, paint)
+            translate( kw - xGap * p - paint.strokeWidth/2, size/2)
+            drawLine(0f, 0f, 0f, sw * scp, paint)
             restore()
         }
         restore()
