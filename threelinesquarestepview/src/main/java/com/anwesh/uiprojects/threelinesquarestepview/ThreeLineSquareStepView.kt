@@ -194,4 +194,27 @@ class ThreeLineSquareStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : ThreeLineSquareStepView) {
+
+        private val tlss : ThreeLineSquareStep = ThreeLineSquareStep(0)
+
+        private val animator : Animator = Animator(view)
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            tlss.draw(canvas, paint)
+            animator.animate {
+                tlss.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tlss.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
